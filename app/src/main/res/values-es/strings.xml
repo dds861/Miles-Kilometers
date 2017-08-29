@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Millas - Kilómetros</string>
+    <string name="kilometres">KILÓMETROS:</string>
+    <string name="miles">MILES:</string>
+    <string name="convert_to">convertir</string>
+    <string name="enterNumber">Introduzca un número</string>
+    <string name="the_result_will_be_shown_here">Esto mostrará el resultado</string>
+</resources>

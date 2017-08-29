@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Мильдер - Километрлер</string>
+    <string name="kilometres">Километрлер</string>
+    <string name="miles">Мильдер</string>
+    <string name="convert_to">түрлендіру</string>
+    <string name="enterNumber">Санды енгізіңіз</string>
+    <string name="the_result_will_be_shown_here">Бұл жерде нәтиже көрсетілінеді</string>
+</resources>

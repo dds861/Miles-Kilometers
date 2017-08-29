@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary_light"
+    android:orientation="vertical"
+    tools:context="com.mathius.dd.milestokm.MainActivity">
+
+
+    <TextView
+        android:id="@+id/tvTop"
+
+        style="@style/textViews"
+        android:text="@string/miles" />
+
+    <EditText
+        android:id="@+id/etInput"
+        style="@style/editTexts"
+        android:background="@android:color/transparent"
+        android:hint="@string/enterNumber" />
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnSwap"
+            style="@style/buttons"
+            android:layout_weight="2"
+            android:drawableLeft="@mipmap/ic_swap" />
+
+        <Button
+            android:id="@+id/btnConvert"
+            style="@style/buttons"
+            android:layout_weight="1"
+            android:text="@string/convert_to" />
+
+        <Button
+            android:id="@+id/btnClean"
+            style="@style/buttons"
+            android:layout_weight="2"
+            android:text="C" />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tvButtom"
+        style="@style/textViews"
+
+        android:text="@string/kilometres" />
+
+    <TextView
+        android:id="@+id/etResult"
+        style="@style/editTexts"
+        android:hint="@string/the_result_will_be_shown_here" />
+
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        android:layout_gravity="center"
+        ads:adUnitId="ca-app-pub-3941279894802307/8293013832"></com.google.android.gms.ads.AdView>
+
+</LinearLayout>

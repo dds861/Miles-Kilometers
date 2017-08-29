@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Мили - Километры</string>
+    <string name="kilometres">КИЛОМЕТРЫ:</string>
+    <string name="miles">МИЛИ:</string>
+    <string name="convert_to">конвертировать</string>
+    <string name="enterNumber">Введите число</string>
+    <string name="the_result_will_be_shown_here">Здесь будет показан результат</string>
+</resources>
