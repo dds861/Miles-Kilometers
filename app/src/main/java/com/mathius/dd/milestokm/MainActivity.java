@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -105,10 +106,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     void convertText() {
-        if (String.valueOf(mEtUpEditText.getText()) == null || String.valueOf(mEtUpEditText.getText()).isEmpty()) {
+        Log.i("autolog", "String.valueOf(mEtUpEditText.getText()): " + String.valueOf(mEtUpEditText.getText()));
+
+        String temp = mEtUpEditText.getText().toString();
+        if (temp.equals(".") || temp.equals(" ") || temp.equals(null) || temp.equals("") || temp.isEmpty()) {
+
             return;
         }
-        ml_to_km = mEtUpEditText.getText().toString();
+        ml_to_km = temp;
         if (mTvFirstState.getText().equals(getString(R.string.miles))) {
             result = Double.valueOf(ml_to_km) * 1.609344;
         } else {
@@ -117,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 //                ml_to_km = String.valueOf(result);
 
-        mTvDown.setText(String.valueOf(result));
+        mTvDown.setText(result.toString());
     }
 
     void makeAnimationOnView(int resourceId, Techniques techniques, int duration, int repeat) {
