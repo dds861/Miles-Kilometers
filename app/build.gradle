@@ -37,6 +37,8 @@ dependencies {
     //https://github.com/daimajia/AndroidViewAnimations библиотека анимации
     compile 'com.daimajia.easing:library:2.0@aar'
     compile 'com.daimajia.androidanimations:library:2.3@aar'
+
+    compile 'com.google.code.gson:gson:2.8.1'
 }
 
 

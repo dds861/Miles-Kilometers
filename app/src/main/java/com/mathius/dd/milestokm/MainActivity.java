@@ -4,16 +4,17 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ScrollView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,12 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -36,16 +43,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mTvDown;
     private ImageView mIvCopyAll;
     private ImageView mIvShare;
-    private ScrollView mScrollViewEditText;
     String ml_to_km;
     Double result;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private ListView mLvHistory;
+
+    //Историю записываем
+    List<Model> products = new ArrayList<>();
+
+    MyAdapter myAdapter;
+
+    //кнопка для созранения истории
+    private ImageView mIvSave;
+
+    //сохраняем историю в preferences
+    SharedPreferences sPref;
+    final String SAVED_TEXT = "saved_text";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+
+        //Проверяет имеется ли запись Истории, если имеется загружает Историю
+        if (loadHistory() != null) {
+            products = loadHistory();
+        }
+
+        //создаем адаптер
+        myAdapter = new MyAdapter(getApplicationContext(), products);
+        //передаем адаптер в listview
+        mLvHistory.setAdapter(myAdapter);
 
         //реклама баннер
         mAdView = findViewById(R.id.adView);
@@ -55,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
+        //При вводе данных будет в ресльном времени конвертироваться
         mEtUpEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -71,11 +101,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void afterTextChanged(Editable editable) {
                 // конвертирует единицы
                 convertText();
+
                 //firebase analytics проверяем нажатие данной кнопки
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "converted1");
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
+
+            }
+        });
+
+        //При нажатии одной из пунктов listview будет скопирован в вверхний edittext
+        mLvHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mEtUpEditText.setText(products.get(i).getTextView1().toString());
             }
         });
 
@@ -100,19 +140,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mIvCopyAll.setOnClickListener(this);
         mIvShare = findViewById(R.id.ivShare);
         mIvShare.setOnClickListener(this);
-        mScrollViewEditText = findViewById(R.id.scrollViewEditText);
-        mScrollViewEditText.setOnClickListener(this);
+        mLvHistory = (ListView) findViewById(R.id.lvHistory);
+
+        mIvSave = (ImageView) findViewById(R.id.ivSave);
+        mIvSave.setOnClickListener(this);
     }
 
-
+    //конвертируем единицу
     void convertText() {
-        Log.i("autolog", "String.valueOf(mEtUpEditText.getText()): " + String.valueOf(mEtUpEditText.getText()));
 
+        //считываем edittext и приобразовываем в string
         String temp = mEtUpEditText.getText().toString();
+
+        //проверяем нету ли точки или пустых значений или null или пустоты
         if (temp.equals(".") || temp.equals(" ") || temp.equals(null) || temp.equals("") || temp.isEmpty()) {
 
+            //в случае обнаружения обрываем дальнейшее исполнение метода
             return;
         }
+
+        //Проверяем если стоит Мили тогда конвертируем в километры и наоборот
         ml_to_km = temp;
         if (mTvFirstState.getText().equals(getString(R.string.miles))) {
             result = Double.valueOf(ml_to_km) * 1.609344;
@@ -120,11 +167,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             result = Double.valueOf(ml_to_km) * 0.621371192237334;
         }
 
-//                ml_to_km = String.valueOf(result);
-
+        //сконвертированную единицу вставляем в textview
         mTvDown.setText(result.toString());
+
+
     }
 
+    //анимации для кнопок
     void makeAnimationOnView(int resourceId, Techniques techniques, int duration, int repeat) {
         YoYo.with(techniques)
                 .duration(duration)
@@ -216,8 +265,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.etResult:// TODO 17/12/24
                 break;
-            case R.id.scrollViewEditText:// TODO 17/12/24
-                break;
             case R.id.ivChangeButtonspinner:// TODO 17/12/24
                 //получаем название kilometres и app_name из strings.xml
 //                String kilometres = getString(R.string.myAlphabet);
@@ -261,6 +308,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 convertText();
 
                 break;
+            case R.id.ivSave:// TODO 18/02/20
+
+                //эффект нажатия на кнопку
+                makeAnimationOnView(R.id.ivSave, Techniques.FadeOut, 150, 0);
+                makeAnimationOnView(R.id.ivSave, Techniques.FadeIn, 350, 0);
+
+                //Записываем в список дял истории
+                //добавляем всегда на первую позицию новый item, остальные смещаются вниз
+                products.add(0, new Model(mEtUpEditText.getText().toString(), result.toString()));
+                try {
+
+                    if (products.get(10) != null) {
+                        products.remove(10);
+                    }
+                } catch (Exception e) {
+                }
+
+                //создаем адаптер
+                myAdapter = new MyAdapter(getApplicationContext(), products);
+                //передаем адаптер в listview
+                mLvHistory.setAdapter(myAdapter);
+
+                break;
         }
     }
 
@@ -275,4 +345,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    void saveHistory() {
+
+        // used for store arrayList in json format
+        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(products);
+        prefsEditor.putString(SAVED_TEXT, json);
+        prefsEditor.apply();
+
+    }
+
+    ArrayList<Model> loadHistory() {
+        Gson gson = new Gson();
+        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+        String json = mPrefs.getString(SAVED_TEXT, "");
+        Type type = new TypeToken<List<Model>>() {
+        }.getType();
+        List<Model> obj = gson.fromJson(json, type);
+
+        return (ArrayList<Model>) obj;
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        saveHistory();
+    }
 }
