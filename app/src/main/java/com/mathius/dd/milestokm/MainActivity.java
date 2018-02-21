@@ -5,7 +5,9 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -97,19 +99,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
-            public void afterTextChanged(Editable editable) {
+            public void afterTextChanged(Editable s) {
+
+                //эффект нажатия на кнопку
+                makeAnimationOnView(R.id.etResult, Techniques.FadeOut, 150, 0);
+                makeAnimationOnView(R.id.etResult, Techniques.FadeIn, 350, 0);
+
                 // конвертирует единицы
                 convertText();
 
-                //firebase analytics проверяем нажатие данной кнопки
-                Bundle bundle = new Bundle();
-                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "converted1");
-                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 
             }
+
+
         });
+
 
         //При нажатии одной из пунктов listview будет скопирован в вверхний edittext
         mLvHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -151,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //считываем edittext и приобразовываем в string
         String temp = mEtUpEditText.getText().toString();
+        temp = temp.replace(",", "");
 
         //проверяем нету ли точки или пустых значений или null или пустоты
         if (temp.equals(".") || temp.equals(" ") || temp.equals(null) || temp.equals("") || temp.isEmpty()) {
@@ -266,14 +274,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.etResult:// TODO 17/12/24
                 break;
             case R.id.ivChangeButtonspinner:// TODO 17/12/24
-                //получаем название kilometres и app_name из strings.xml
-//                String kilometres = getString(R.string.myAlphabet);
-//                String miles = getString(R.string.app_name);
-                String kilometres = getString(R.string.kilometres);
-                String miles = getString(R.string.miles);
+
 
                 //получаем текущий item в спиннере 2 (mTvSecondState)
-                String resultSecondState = mTvSecondState.getText().toString();
+//                String resultSecondState = mTvSecondState.getText().toString();
 
 //                if (!resultSecondState.equals(kilometres) && !resultSecondState.equals(miles)) {
 //
@@ -314,13 +318,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 makeAnimationOnView(R.id.ivSave, Techniques.FadeOut, 150, 0);
                 makeAnimationOnView(R.id.ivSave, Techniques.FadeIn, 350, 0);
 
+                //эффект нажатия на кнопку
+                makeAnimationOnView(R.id.lvHistory, Techniques.FadeOut, 150, 0);
+                makeAnimationOnView(R.id.lvHistory, Techniques.FadeIn, 350, 0);
+
+                String temp = mEtUpEditText.getText().toString();
+
+                if (temp.equals(".") || temp.equals(" ") || temp.equals(null) || temp.equals("") || temp.isEmpty()) {
+
+                    //в случае обнаружения обрываем дальнейшее исполнение метода
+                    return;
+                }
+
+                //получаем название kilometres и miles из strings.xml
+                String kilometres = getString(R.string.kilometres);
+                String miles = getString(R.string.miles);
+
+                if (mTvFirstState.getText().equals(miles)) {
+                    miles = "mi";
+                    kilometres = "km";
+                } else {
+                    miles = "km";
+                    kilometres = "mi";
+                }
+
                 //Записываем в список дял истории
                 //добавляем всегда на первую позицию новый item, остальные смещаются вниз
-                products.add(0, new Model(mEtUpEditText.getText().toString(), result.toString()));
+                products.add(0, new Model(mEtUpEditText.getText().toString(), result.toString(), miles, kilometres));
                 try {
 
-                    if (products.get(10) != null) {
-                        products.remove(10);
+                    if (products.get(30) != null) {
+                        products.remove(30);
                     }
                 } catch (Exception e) {
                 }

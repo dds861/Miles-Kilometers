@@ -33,9 +33,13 @@ public class MyAdapter extends ArrayAdapter<Model> {
 
         TextView textView1 = (TextView) view.findViewById(R.id.text1);
         TextView textView2 = (TextView) view.findViewById(R.id.text2);
+        TextView edinica1 = (TextView) view.findViewById(R.id.tvEdinica1);
+        TextView edinica2 = (TextView) view.findViewById(R.id.tvEdinica2);
 
         textView1.setText(product.getTextView1());
         textView2.setText(product.getTextView2());
+        edinica1.setText(product.getEdinica1());
+        edinica2.setText(product.getEdinica2());
 
         return view;
     }
