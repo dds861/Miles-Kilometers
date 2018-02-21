@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 convertText();
 
 
-
             }
 
 
@@ -216,25 +215,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //Вставляем в edittext - текст с буфера обмена
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
-                //check for null
-                String oldText;
-                if (mEtUpEditText.getText().toString() == null) {
-                    oldText = "";
-                } else {
 
-                    oldText = mEtUpEditText.getText().toString();
+                //check for null
+                String textFromClipboard = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
+
+                try {
+                    Double.parseDouble(textFromClipboard);
+                } catch (Exception e) {
+                    return;
                 }
 
-                //check for null
-                String newText;
+
                 if (clipboard == null) {
-                    newText = "";
+                    return;
                 } else {
 
-                    newText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
+                    mEtUpEditText.setText(textFromClipboard);
                 }
-
-                mEtUpEditText.setText(oldText + newText);
 
 
                 break;
