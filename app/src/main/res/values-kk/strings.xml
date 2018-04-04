@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Мили - километр</string>
-    <string name="kilometres">Сантиметрлер</string>
-    <string name="miles">Дюйм</string>
+    <string name="kilometres">Километрлер</string>
+    <string name="miles">Мили</string>
     <string name="enterNumber">Нөмірді енгізіңіз</string>
     <string name="here_will_be_text_in_latin_kazakh">Нәтиже осында көрсетіледі</string>
     <string name="enter_text_in_cyrillic_kazakh">Нөмірді енгізіңіз</string>
