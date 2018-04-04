@@ -15,7 +15,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-3941279894802307/8293013832"></com.google.android.gms.ads.AdView>
+        ads:adUnitId="@string/id_admob"/>
 
     <LinearLayout
 
@@ -28,7 +28,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorPrimaryDark" />
+            android:background="@color/primary_dark" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,7 +50,7 @@
                 android:text="@string/miles"
 
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/primary" />
 
             <ImageView
                 android:id="@+id/ivChangeButtonspinner"
@@ -75,13 +75,13 @@
                 android:gravity="center"
                 android:text="@string/kilometres"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/primary" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorPrimaryDark" />
+            android:background="@color/primary_dark" />
 
 
         <LinearLayout
@@ -154,13 +154,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                app:cardBackgroundColor="@color/colorPrimary"
-                card_view:cardCornerRadius="4dp">
+                card_view:cardCornerRadius="4dp"
+                ads:cardBackgroundColor="@color/primary">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/primary"
                     android:orientation="vertical">
 
                     <TextView
@@ -205,7 +205,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorPrimaryDark" />
+                android:background="@color/primary_dark" />
 
             <ListView
                 android:id="@+id/lvHistory"
