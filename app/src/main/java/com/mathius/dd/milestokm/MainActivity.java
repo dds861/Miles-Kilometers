@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView mIvSave;
 
     //сохраняем историю в preferences
-    SharedPreferences sPref;
+
     final String SAVED_TEXT = "saved_text";
 
     @Override
